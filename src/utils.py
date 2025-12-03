@@ -25,14 +25,24 @@ def read_initial_conditions(path: str) -> pd.DataFrame:
 
     # Rename the first two columns to standard name 'x' and 'C'
     original_cols = df.columns
+    if len(original_cols) < 2:
+        raise ValueError("Initial conditions CSV must have at least two columns.")
+    
     df = df.rename(columns={
         original_cols[0]: "x",
         original_cols[1]: "C"
     })
 
     # Keep only the two relevant columns and ensure they are numeric
-    df = df[["x", "C"]].astype(float)
+    df = df(
+        [["x", "C"]]
+        .astype(float)
+        .dropna(subset=["x", "C"])
+        .sort_values("x")
+    )
 
+    if df.emty:
+        raise ValueError("Initial conditions DataFrame is empty after cleaning.")
     return df
 
 
