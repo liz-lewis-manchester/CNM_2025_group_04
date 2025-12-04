@@ -1,22 +1,39 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-def plot_space_time(C, x, t, savepath=None):
-    """
-    Plots concentration vs distance for several time steps.
 
-    C : 2D array of shape (nt, nx)
-    x : 1D array of positions
-    t : 1D array of times
-    """
-    plt.figure()
-    for i, ti in enumerate(t):
-        plt.plot(x, C[i, :], label=f"t={ti:.0f}s")
-    plt.xlabel("Distance along river (m)")
-    plt.ylabel("Concentration (µg/m³)")
+def plot_space_time_snapshots(
+    x: np.ndarray,
+    t: np.ndarray,
+    C: np.ndarray,
+    snapshots=None,
+    title: str = "",
+    savepath: str | None = None,
+    show: bool = False,
+):
+
+    nt, nx = C.shape
+
+    if snapshots is None:
+        snapshots = [0, nt // 3, 2 * nt // 3, nt - 1]
+
+    plt.figure(figsize=(10, 6))
+
+    for idx in snapshots:
+        if 0 <= idx < nt:
+            plt.plot(x, C[idx, :], label=f"t = {t[idx]:.0f} s")
+
+    plt.xlabel("x (m)")
+    plt.ylabel("Concentration C (µg/m³)")
+    if title:
+        plt.title(title)
     plt.legend()
-    plt.tight_layout()
-    if savepath:
-        plt.savefig(savepath)
-    plt.close()
+    plt.grid(True)
 
+    if savepath is not None:
+        plt.savefig(savepath, dpi=200)
+
+    if show:
+        plt.show()
+    else:
+        plt.close()
