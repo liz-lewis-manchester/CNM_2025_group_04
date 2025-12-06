@@ -12,18 +12,12 @@ from plots import plot_space_time_snapshots
 
 
 def run_test_case_1():
-    """
-    Test Case 1: (explanation)
-    - Uses the base case defined in model.py (run_base_case)
-    - Plots several time snapshots
-    - Saves plot to src/results/test_case_1.png
-    """
-
     x, t, C = run_base_case() 
 
     results_dir = os.path.join(SRC_DIR, "results")
     os.makedirs(results_dir, exist_ok=True)
     plot_path = os.path.join(results_dir, "test_case_1.png")
+    print("Saving to:", plot_path)
 
     plot_space_time_snapshots(
         x,
