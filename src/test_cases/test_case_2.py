@@ -27,10 +27,10 @@ def run_test_case_2():
     U = 0.1
 
     data_path = os.path.join(SRC_DIR, "data", "initial_conditions.csv")
-    df = pd.read_csv(data_path)
+    df = pd.read_csv(data_path, encoding="latin1") 
 
-    x_data = df["x"].to_numpy()
-    C_data = df["C"].to_numpy()
+    x_data = df.iloc[:, 0].to_numpy()
+    C_data = df.iloc[:, 1].to_numpy()
 
     x_min, x_max = x_data.min(), x_data.max()
     x = create_space_grid(x_min, x_max, dx)
