@@ -8,7 +8,7 @@ if SRC_DIR not in sys.path:
     sys.path.append(SRC_DIR)
 
 from model import run_base_case
-from plots import plot_space_time_snapshots
+from plots import plot_space_time_snapshots, animate_advection
 
 
 def run_test_case_1():
@@ -26,11 +26,20 @@ def run_test_case_1():
         snapshots=None,  # default: [0, nt/3, 2nt/3, nt-1]
         title="Test Case 1 – Advection of Point Source at x=0",
         savepath=plot_path,
-        show=True,  # show graph as well
+        show=True, 
+    )
+
+    print(f"Saved plot to {plot_path}")
+
+    animate_advection(
+        x,
+        t,
+        C,
+        title="Test Case 1 – Advection Animation",
+        interval=150,
     )
 
     print("Test Case 1 complete.")
-    print(f"Saved plot to {plot_path}")
 
 
 if __name__ == "__main__":
