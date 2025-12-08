@@ -27,7 +27,7 @@ def run_test_case_2():
     U = 0.1
 
     data_path = os.path.join(SRC_DIR, "data", "initial_conditions.csv")
-    df = pd.read_csv(data_path, encoding="latin1") 
+    df = pd.read_csv(data_path, encoding="latin1")
 
     x_data = df.iloc[:, 0].to_numpy()
     C_data = df.iloc[:, 1].to_numpy()
