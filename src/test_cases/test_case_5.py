@@ -44,8 +44,6 @@ def test_case_5(
 
         results["perturbed"].append({'U': U_perturbed, 'C': C_perturbed,})
 
-        print('Completed velocity perturbation run {k+1}/{num_realizations}")
-
     results["x"] = x
     results["t"] = t
 
