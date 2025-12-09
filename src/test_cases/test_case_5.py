@@ -5,7 +5,7 @@ import numpy as np
 def test_case_5(
     U_base=0.1,
     perturbation_level=0.10,
-    num_realizations=5,
+    num_runs=5,
     L=20.0,
     dx=0.2,
     t_end=300.0,
@@ -34,7 +34,7 @@ def test_case_5(
     results = {"baseline": C_baseline, "perturbed": []}
 
     # Petrubed Velocity Runs
-    for k in range(num_realizations):
+    for k in range(num_runs):
 
         # 10% random perturbation: U(x) = U_base * (1 + 0.1 * random_noise)
         random_noise = np.random.uniform(-1, 1, nx)
