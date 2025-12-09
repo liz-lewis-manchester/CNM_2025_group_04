@@ -9,18 +9,11 @@ if SRC_DIR not in sys.path:
     sys.path.append(SRC_DIR)
 
 from model import create_space_grid, create_time_grid, advect_1d_backward
-from plots import plot_space_time_snapshots
+from plots import plot_space_time_snapshots, animate_advection
 
 
 def run_test_case_2():
-    """
-    Test Case 2:
-    - Read initial condition from CSV
-    - Interpolate to computational grid
-    - Run backward 1D advection
-    - Save arrays + plot using central plotting function
-    """
-
+  
     dx = 0.2
     dt = 10.0
     t_end = 300.0
@@ -70,6 +63,15 @@ def run_test_case_2():
     )
 
     print(f"Saved plot to {plot_path}")
+
+    animate_advection(
+        x,
+        t,
+        C,
+        title="Test Case 2 – CSV Initial Condition Animation",
+        interval=150,
+    )
+
     print("Test Case 2 complete.")
 
 
