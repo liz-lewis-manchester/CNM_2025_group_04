@@ -38,19 +38,19 @@ def advect_1d_backward(
     for n in range(1, nt):
         C_new = np.zeros(nx, dtype=float)
         if inlet_func is None:
-            C_new[0] = C[0, 0]  # keep same as initial
+            C_new[0] = C[0, 0]  
         else:
             C_new[0] = float(inlet_func(n * dt))
 
-        # build a_i, b_i and f_i for i = 1..nx-1
-        U_int = U_arr[1:]  # internal points
-        a = inv_dt + U_int * inv_dx + decay_rate      # (1/dt + u/dx + λ)
-        b = U_int * inv_dx                            # u/dx
-        f = inv_dt * C[n - 1, 1:]                     # RHS = (1/dt) C^{n-1}_i
+       
+        U_int = U_arr[1:]  
+        a = inv_dt + U_int * inv_dx + decay_rate      
+        b = U_int * inv_dx                            
+        f = inv_dt * C[n - 1, 1:]                    
 
-        # forward substitution along x
+        
         for i in range(1, nx):
-            idx = i - 1  # index into a,b,f arrays (which start at x1)
+            idx = i - 1  
             if i == 1:
                 rhs = f[idx] + b[idx] * C_new[0]
             else:
@@ -80,8 +80,61 @@ def run_base_case():
     C0[0] = 250.0
 
     def inlet(t_n):
-        # constant source at x=0 in time
         return 250.0
 
     C = advect_1d_backward(C0, U, dx, dt, nt, inlet_func=inlet, decay_rate=0.0)
     return x, t, C
+    
+def advect_1d_backward_variable_u(
+    C0: np.ndarray,
+    U_series: np.ndarray,  
+    dx: float,
+    dt: float,
+    nt: int,
+    inlet_func=None,
+    decay_rate: float = 0.0,
+) -> np.ndarray:
+
+    C0 = np.asarray(C0, dtype=float)
+    nx = C0.size
+
+    U_series = np.asarray(U_series, dtype=float)
+    if U_series.size != nt:
+        raise ValueError("U_series must have length nt")
+
+    C = np.zeros((nt, nx), dtype=float)
+    C[0, :] = C0.copy()
+
+    inv_dt = 1.0 / dt
+    inv_dx = 1.0 / dx
+
+    for n in range(1, nt):
+        U_n = float(U_series[n-1])   
+        U_arr = np.full(nx, U_n)    
+
+        C_new = np.zeros(nx, dtype=float)
+
+        
+        if inlet_func is None:
+            C_new[0] = C[0, 0]
+        else:
+            C_new[0] = float(inlet_func(n * dt))
+
+        
+        U_int = U_arr[1:]
+        a = inv_dt + U_int * inv_dx + decay_rate   
+        b = U_int * inv_dx                         
+        f = inv_dt * C[n - 1, 1:]                  
+
+        
+        for i in range(1, nx):
+            idx = i - 1
+            if i == 1:
+                rhs = f[idx] + b[idx] * C_new[0]
+            else:
+                rhs = f[idx] + b[idx] * C_new[i - 1]
+            C_new[i] = rhs / a[idx]
+
+        C[n, :] = C_new
+
+    return C
