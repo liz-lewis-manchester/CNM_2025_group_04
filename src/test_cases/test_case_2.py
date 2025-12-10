@@ -2,6 +2,7 @@ import os
 import sys
 import numpy as np
 import pandas as pd
+import IPython.display as ipd
 
 THIS_DIR = os.path.dirname(__file__)
 SRC_DIR = os.path.dirname(THIS_DIR)
@@ -45,11 +46,6 @@ def run_test_case_2():
     results_dir = os.path.join(SRC_DIR, "results")
     os.makedirs(results_dir, exist_ok=True)
 
-    np.save(os.path.join(results_dir, "test_case_2_C.npy"), C)
-    np.save(os.path.join(results_dir, "test_case_2_x.npy"), x)
-    np.save(os.path.join(results_dir, "test_case_2_t.npy"), t)
-    print("Saved numerical arrays to", results_dir)
-
     plot_path = os.path.join(results_dir, "test_case_2.png")
 
     plot_space_time_snapshots(
@@ -64,13 +60,15 @@ def run_test_case_2():
 
     print(f"Saved plot to {plot_path}")
 
-    animate_advection(
+    print ("Generating animation...")
+    anim = animate_advection(
         x,
         t,
         C,
         title="Test Case 2 – CSV Initial Condition Animation",
         interval=150,
     )
+    ipd.display(ipd.HTML(anim.to_jshtml()))
 
     print("Test Case 2 complete.")
 

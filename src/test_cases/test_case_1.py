@@ -9,6 +9,7 @@ if SRC_DIR not in sys.path:
 
 from model import run_base_case
 from plots import plot_space_time_snapshots, animate_advection
+from IPython.display import HTML, display
 
 
 def run_test_case_1():
@@ -31,18 +32,18 @@ def run_test_case_1():
 
     print(f"Saved plot to {plot_path}")
 
-    animate_advection(
-        x,
-        t,
-        C,
-        title="Test Case 1 – Advection Animation",
-        interval=150,
+    
+    print ("Generating animation...")
+    anim = animate_advection(
+      x,
+      t,
+      C,
+      title = "Test Case 1 - Advection Animation"
     )
-
+    display(HTML(anim.to_jshtml()))
+    
     print("Test Case 1 complete.")
 
 
 if __name__ == "__main__":
     run_test_case_1()
-
-
