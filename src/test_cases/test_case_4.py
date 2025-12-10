@@ -2,6 +2,7 @@ import numpy as np
 import os
 import sys
 import matplotlib.pyplot as plt
+import IPython.display as ipd
 
 THIS_DIR = os.path.dirname(__file__)
 SRC_DIR = os.path.dirname(THIS_DIR)
@@ -20,6 +21,7 @@ def run_test_case_4(
     t_end: float = 300.0,
     dt: float = 10.0,
     U: float = 0.1,
+    example_lambda: float | None = None,
 ):
 
 
@@ -30,7 +32,6 @@ def run_test_case_4(
 
     for lam in decay_rates:
 
-        # Create grids
         x = create_space_grid(0.0, L, dx)
         t = create_time_grid(0.0, t_end, dt)
 
@@ -68,10 +69,11 @@ def run_test_case_4(
     ax.set_ylabel("C (µg/m³)")
     ax.set_title("Effect of decay rate λ on final concentration profile")
     ax.legend()
+    plt.tight_layout()
     plt.show()
 
     
-    if example_lambda in results:
+    if example_lambda is not None and example_lambda in results:
         res = results[example_lambda]
         plot_space_time_snapshots(
             res["x"],
@@ -83,15 +85,18 @@ def run_test_case_4(
             show=True,
         )
 
-        animate_advection(
+        anim = animate_advection(
             res["x"],
             res["t"],
             res["C"],
             title=f"Test Case 4 – Animation for λ = {example_lambda}",
             interval=150,
         )
+        ipd.display(ipd.HTML(anim.to_jshtml()))
 
-    return results
+    print("Test Case 4 complete.")
+
+    return None
 
 
 if __name__ == "__main__":

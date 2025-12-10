@@ -1,6 +1,8 @@
 import numpy as np
 import sys
 import os
+import matplotlib.pyplot as plt
+import IPython.display as ipd
 
 THIS_DIR = os.path.dirname(__file__)
 SRC_DIR = os.path.dirname(THIS_DIR)
@@ -9,7 +11,7 @@ if SRC_DIR not in sys.path:
 
 from model import create_space_grid, create_time_grid, advect_1d_backward
 from plots import plot_space_time_snapshots, animate_advection
-import matplotlib.pyplot as plt
+
 
 
 def run_test_case_3(
@@ -28,6 +30,7 @@ def run_test_case_3(
 
     if dt_values is None:
         dt_values = [1.0, 5.0, 10.0]
+    results = []
 
 
     for U in U_values:
@@ -87,15 +90,53 @@ def run_test_case_3(
     ax.legend()
     plt.show()
 
+    fig, ax = plt.subplots(figsize=(8, 4))
+    target_U = 0.1
+    target_dx = 0.1
+
+    for entry in results:
+        if entry["U"] == target_U and abs(entry["dx"] - target_dx) < 1e-12:
+            x = entry["x"]
+            C = entry["C"]
+            label = f"dt={entry['dt']}"
+            ax.plot(x, C[-1, :], label=label)
+
+    ax.set_xlabel("x (m)")
+    ax.set_ylabel("C (µg/m³)")
+    ax.set_title("Sensitivity to dt (U=0.1 m/s, dx=0.1 m)")
+    ax.legend()
+    plt.tight_layout()
+    plt.show()
+
+    fig, ax = plt.subplots(figsize=(8, 4))
+    target_dx = 0.1
+    target_dt = 5.0
+
+    for entry in results:
+        if abs(entry["dx"] - target_dx) < 1e-12 and entry["dt"] == target_dt:
+            x = entry["x"]
+            C = entry["C"]
+            label = f"U={entry['U']}"
+            ax.plot(x, C[-1, :], label=label)
+
+    ax.set_xlabel("x (m)")
+    ax.set_ylabel("C (µg/m³)")
+    ax.set_title("Sensitivity to U (dx=0.1 m, dt=5 s)")
+    ax.legend()
+    plt.tight_layout()
+    plt.show()
+
+
     example_case = results[0]
-    animate_advection(
+    anim = animate_advection(
         example_case["x"],
         example_case["t"],
         example_case["C"],
         title="Test Case 3 – Animation Example",
     )
+    ipd.display(ipd.HTML(anim.to_jshtml()))
 
-    return results
+    return None
 
 
 if __name__ == "__main__":
