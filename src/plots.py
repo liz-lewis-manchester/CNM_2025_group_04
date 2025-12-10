@@ -1,6 +1,10 @@
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 import numpy as np
+from IPython.display import HTML, display 
+from matplotlib import rc
+
+rc("animation", html="jshtml")
 
 def animate_advection(x, t, C, title="Advection Animation", interval=150):
     fig, ax = plt.subplots(figsize=(8, 4))
@@ -23,7 +27,7 @@ def animate_advection(x, t, C, title="Advection Animation", interval=150):
     anim = FuncAnimation(fig, update, frames=len(t), init_func=init,
                          blit=True, interval=interval)
 
-    plt.show()
+    display(HTML(anim.to_jshtml()))
     return anim
     
 def plot_space_time_snapshots(
