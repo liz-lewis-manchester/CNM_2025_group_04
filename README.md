@@ -96,12 +96,108 @@ This function is intended for use inside Jupyter notebooks, where the returned a
 
 **Example (Jupyter Notebook):**
 
+---
+
 ```python
 from src.plots import animate_advection
 from IPython.display import display
 
 anim = animate_advection(x, t, C, title="Pollutant Transport Animation")
 display(anim)
+```
+
+## Test Cases
+
+The project includes several test cases to evaluate model behaviour under different numerical and physical conditions.  
+These tests help confirm that the advection model behaves as expected and that the numerical setup is robust.
+
+---
+
+### Test Case 3 – Parameter Sensitivity
+
+This test investigates how changes in the key numerical parameters affect the final pollutant distribution:
+
+- Flow velocity **U**
+- Spatial resolution **dx**
+- Time step **dt**
+
+For multiple combinations of (U, dx, dt), the model is run and:
+
+- The maximum concentration is recorded  
+- The location of the concentration peak is tracked  
+- Final concentration profiles are plotted to compare sensitivity to each parameter  
+
+An example animation is also produced for one parameter set.  
+This test demonstrates stability, resolution effects, and how parameter choices influence plume movement.
+
+---
+
+### Test Case 4 – Exponential Decay at the Inlet
+
+This test applies an exponentially decaying inlet concentration:
+
+$C_{\text{in}}(t) = C_0 e^{-\lambda t}$
+
+
+Several decay rates **λ** (e.g. 0.0, 0.005, 0.01, 0.02) are tested.  
+For each λ:
+
+- The model is run with a decaying source  
+- The final plume shape is compared  
+- Maximum concentration values are recorded  
+
+Plots show how stronger decay rates reduce downstream concentrations.  
+A space–time plot and animation can be generated for selected λ values.
+
+---
+
+### Test Case 5 – Variable Velocity Profile
+
+This test explores the impact of an unsteady flow velocity:
+
+- The base velocity is **U₀ = 0.1 m/s**
+- A noisy time series U(t) is generated with ±10% random variation  
+- Concentration fields are compared for:
+  1. Constant velocity  
+  2. Variable velocity U(t)
+
+Outputs include:
+
+- A plot of U(t) vs time  
+- A comparison of final concentration profiles (constant vs variable U)  
+- A space–time plot of the variable-velocity case  
+
+This test shows how fluctuating flow conditions influence pollutant transport.
+
+---
+
+These test cases collectively evaluate numerical stability, physical behaviour, and parameter sensitivity of the pollutant transport model.
+
+## Assumptions and Limitations
+
+This model makes several simplifying assumptions to focus on the core 1D advection behaviour:
+
+- The river is represented as a **one-dimensional** domain; effects of width and depth are not included.
+- **No diffusion or dispersion** is modelled — transport is purely advective.
+- Flow velocity **U** is assumed constant unless explicitly varied in a test case.
+- The downstream boundary is treated as **free outflow**, with no reflection or backflow.
+- Pollutant behaviour is linear and includes only optional exponential decay.
+- Numerical accuracy and stability depend on the chosen **dx** and **dt**; the implicit upwind scheme ensures stability.
+
+These assumptions simplify the physical system and allow the model to demonstrate numerical advection and parameter sensitivity clearly.
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
