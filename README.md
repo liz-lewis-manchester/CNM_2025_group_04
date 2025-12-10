@@ -74,6 +74,36 @@ The solver (in `src/solver.py`) uses a backward (implicit) upwind scheme, which 
 
 The `run_base_case()` function runs the full simulation using the coursework setup (20 m domain, 300 s, 0.1 m/s velocity, 250 µg/m³ inlet).
 
+## Plotting and Visualisation
+
+The project provides tools for visualising how pollutant concentration evolves in space and time.  
+These functions are implemented in `src/plots.py`.
+
+---
+
+### 1. Animation of the Advection Process
+
+The function `animate_advection(x, t, C, ...)` generates a simple animation showing how the pollutant profile  
+\( C(x,t) \) moves downstream over time.
+
+**Inputs:**
+- **x** – spatial grid  
+- **t** – time grid  
+- **C** – concentration array of shape (nt, nx)  
+- **interval** – optional frame delay (milliseconds)  
+
+This function is intended for use inside Jupyter notebooks, where the returned animation object can be displayed directly.
+
+**Example (Jupyter Notebook):**
+
+```python
+from src.plots import animate_advection
+from IPython.display import display
+
+anim = animate_advection(x, t, C, title="Pollutant Transport Animation")
+display(anim)
+
+
 
 
 
