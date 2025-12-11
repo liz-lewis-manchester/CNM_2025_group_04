@@ -76,35 +76,27 @@ The `run_base_case()` function runs the full simulation using the coursework set
 
 ## Plotting and Visualisation
 
-The project provides tools for visualising how pollutant concentration evolves in space and time.  
+The project includes basic tools for visualising how the pollutant concentration changes over time.  
 These functions are implemented in `src/plots.py`.
-
----
 
 ### 1. Animation of the Advection Process
 
-The function `animate_advection(x, t, C, ...)` generates a simple animation showing how the pollutant profile  
-\( C(x,t) \) moves downstream over time.
+`animate_advection(x, t, C, ...)` creates an animation showing how the concentration profile moves downstream during the simulation.
 
 **Inputs:**
 - **x** – spatial grid  
 - **t** – time grid  
-- **C** – concentration array of shape (nt, nx)  
-- **interval** – optional frame delay (milliseconds)  
+- **C** – concentration array (nt × nx)  
+- **interval** – optional delay between frames  
 
-This function is intended for use inside Jupyter notebooks, where the returned animation object can be displayed directly.
+This is useful for quickly seeing how the pollutant plume evolves.
 
-**Example (Jupyter Notebook):**
+### 2. Snapshot Plots
 
----
+`plot_space_time_snapshots(x, t, C, ...)` plots the concentration at several different time steps on the same figure, helping compare how the profile changes throughout the simulation.
 
-```python
-from src.plots import animate_advection
-from IPython.display import display
+These visualisation tools help interpret the results produced by the numerical solver.
 
-anim = animate_advection(x, t, C, title="Pollutant Transport Animation")
-display(anim)
-```
 
 ## Test Cases
 
@@ -173,18 +165,6 @@ This test shows how fluctuating flow conditions influence pollutant transport.
 
 These test cases collectively evaluate numerical stability, physical behaviour, and parameter sensitivity of the pollutant transport model.
 
-## Assumptions and Limitations
-
-This model makes several simplifying assumptions to focus on the core 1D advection behaviour:
-
-- The river is represented as a **one-dimensional** domain; effects of width and depth are not included.
-- **No diffusion or dispersion** is modelled — transport is purely advective.
-- Flow velocity **U** is assumed constant unless explicitly varied in a test case.
-- The downstream boundary is treated as **free outflow**, with no reflection or backflow.
-- Pollutant behaviour is linear and includes only optional exponential decay.
-- Numerical accuracy and stability depend on the chosen **dx** and **dt**; the implicit upwind scheme ensures stability.
-
-These assumptions simplify the physical system and allow the model to demonstrate numerical advection and parameter sensitivity clearly.
 
 
 
