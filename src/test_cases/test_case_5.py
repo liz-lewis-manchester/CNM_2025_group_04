@@ -3,54 +3,64 @@ import sys
 import numpy as np
 import matplotlib.pyplot as plt
 
+# path setup so the script can import modules from src/
 THIS_DIR = os.path.dirname(__file__)
 SRC_DIR = os.path.dirname(THIS_DIR)
 if SRC_DIR not in sys.path:
     sys.path.append(SRC_DIR)
 
+# import solver utilities 
 from model import (
     create_space_grid,
     create_time_grid,
     advect_1d_backward,
     advect_1d_backward_variable_u,
 )
-from plots import plot_space_time_snapshots
+from plots import plot_space_time_snapshots # imports plotting utility 
 
 
 def run_test_case_5(
-    U0: float = 0.1,     
-    dx: float = 0.2,     
-    dt: float = 10.0,    
-    L: float = 20.0,     
-    t_end: float = 300.0 
+    U0: float = 0.1,     # mean velocity 
+    dx: float = 0.2,     # spatial step size
+    dt: float = 10.0,    # time step size
+    L: float = 20.0,     # domain length
+    t_end: float = 300.0 # final simulation time 
 ) -> None:
-    
-
+    """ 
+    this test investigates how a variable stream velocity profile alters the model results
+    and we will add a 10% random perturbation to a constant velocity profile.
+    """
+    # creating spatial and temporal grids
     x = create_space_grid(0.0, L, dx)
     t = create_time_grid(0.0, t_end, dt)
     nt = t.size
     nx = x.size
 
+    # initial condition: non-zero concentration at inlet only 
     C0 = np.zeros(nx)
     C0[0] = 250.0
 
+    # case 1: constant velocity U=U0
     C_const = advect_1d_backward(
         C0,
         U=U0,
         dx=dx,
         dt=dt,
         nt=nt,
-        inlet_func=None,
+        inlet_func=None, # inlet held constant at initial value 
         decay_rate=0.0,
     )
 
-    
-    rng = np.random.default_rng(seed=0)  
-    noise = 0.1 * rng.standard_normal(nt)  
+    # case 2: time varying velocity U(t)
+    # velocity fluctuates randomly around U0
+    rng = np.random.default_rng(seed=0) # fixed seed for reproducibility  
+    noise = 0.1 * rng.standard_normal(nt)  # 10% Gaussian noise
     U_series = U0 * (1.0 + noise)
 
+    # ensuring velocity remains physically meaningful (positive)
     U_series = np.clip(U_series, 0.01, None)
 
+    # running the solver with time dependant velocity 
     C_var = advect_1d_backward_variable_u(
         C0,
         U_series=U_series,
@@ -61,6 +71,7 @@ def run_test_case_5(
         decay_rate=0.0,
     )
 
+    # creating results directory 
     results_dir = os.path.join(SRC_DIR, "results")
     os.makedirs(results_dir, exist_ok=True)
 
@@ -110,6 +121,6 @@ def run_test_case_5(
 
     print("Test Case 5 complete.")
 
-
+# allows this test to be run as a standalone script
 if __name__ == "__main__":
     run_test_case_5()
