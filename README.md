@@ -81,8 +81,10 @@ Below is a demonstration of how step by step the model can run, which will respe
 
 Clone the following repository, which you can do by clicking on the green button located in the homepage "Code" and copying the repository HTTPS and then you can paste the following in Google Collab:
 
+
 ```bash
 !git clone https://github.com/liz-lewis-manchester/CNM_2025_group_04.git
+
 
 In order to run the test cases the fastest and most efficient way is by importing and running them, since Google Collab already cloned the whole repository. In order to do that, just paste the following command into a new cell:
 
