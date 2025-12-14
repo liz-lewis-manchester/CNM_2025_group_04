@@ -86,19 +86,25 @@ Clone the following repository, which you can do by clicking on the green button
 
 In order to run the test cases the fastest and most efficient way is by importing and running them, since Google Collab already cloned the whole repository. In order to do that, just paste the following command into a new cell:
 
+
 %cd /content/CNM_2025_group_04/src
 from test_cases.test_case_1 import run_test_case_1
 run_test_case_1()
 
+
 Once this is done, you can click the run button and the code will produce all the required figures and animations, at the same time saving all the animations in the results folder.
 
+
 The aforementioned technique can be used in all test cases, however, if you want to see the animation for "test case 4" you will need to highlight which lambda you want to see the animation. In order to do this, in a new cell just paste the following:
+
 
 %cd /content/CNM_2025_group_04/src
 from test_cases.test_case_4 import run_test_case_4
 run_test_case_4(example_lambda=n)
 
+
 And instead of "n", replace it with the exact value of lambda that you are interested in.
+
 
 Similarly, the codes can be opened and run manually in case certain changes are required to be made or adjusted.
 
