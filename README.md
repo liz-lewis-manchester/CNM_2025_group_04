@@ -92,7 +92,7 @@ In order to run the test cases the fastest and most efficient way is by importin
 %cd /content/CNM_2025_group_04/src
 from test_cases.test_case_1 import run_test_case_1
 run_test_case_1()
-```
+
 
 Once this is done, you can click the run button and the code will produce all the required figures and animations, at the same time saving all the animations in the results folder.
 
@@ -102,7 +102,7 @@ The aforementioned technique can be used in all test cases, however, if you want
 %cd /content/CNM_2025_group_04/src
 from test_cases.test_case_4 import run_test_case_4
 run_test_case_4(example_lambda=n)
-```
+
 
 And instead of "n", replace it with the exact value of lambda that you are interested in.
 
