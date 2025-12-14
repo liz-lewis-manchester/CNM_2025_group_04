@@ -13,13 +13,15 @@ from IPython.display import HTML, display
 
 
 def run_test_case_1():
+    """Run test case 1: Advection of Point Source at x=0"""
     x, t, C = run_base_case() 
 
     results_dir = os.path.join(SRC_DIR, "results")
     os.makedirs(results_dir, exist_ok=True)
     plot_path = os.path.join(results_dir, "test_case_1.png")
-    print("Saving to:", plot_path)
+    print(f"Saving to: {plot_path}")
 
+    # Generate static snapshots 
     plot_space_time_snapshots(
         x,
         t,
@@ -32,7 +34,7 @@ def run_test_case_1():
 
     print(f"Saved plot to {plot_path}")
 
-    
+    # Generate animation
     print ("Generating animation...")
     anim = animate_advection(
       x,
