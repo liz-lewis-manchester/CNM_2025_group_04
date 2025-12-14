@@ -35,7 +35,18 @@ It is significant to mention that a backward Euler scheme in time and backward d
 
 ## Repository structure
 
-The repository structure has been developed in such a way which is clean to the user and allows easy movement across the folders. Everything is saved in the folder called “src”. The folder “src” itself contains folders: data, notebooks, results and test cases. In the “src” we also have model.py, plots.py and utils.py.
+.
+├── README.md
+├── data/
+│   └── initial_conditions.csv
+├── results/
+├── src/
+│   ├── solver.py
+│   ├── initial_conditions.py
+│   ├── plotting.py
+│   └── main.py
+└── tests/
+
 
 ---
 
@@ -61,7 +72,7 @@ The repository structure has been developed in such a way which is clean to the 
   
 - **plots.py** - this contains the functions for plotting concentration profiles at selected times and functions for animating pollutant transport over time. The significancy of this is to seperate the visualisation from numerical modelling, while allowinig consistent plotting across all test cases and helps to keep test cases clean and focused on defining scenarios.
 
-- **Utils.py** - this contains helper functions for reading CSV data.
+- **utils.py** - this contains helper functions for reading CSV data.
 
 - **data/** - this folder is created to contain the input data files required by the model. This is to keep raw input seperate from code and moreover helps to replace or extend datasets without changing the solver.
 
