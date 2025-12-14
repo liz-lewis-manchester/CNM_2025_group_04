@@ -63,7 +63,7 @@ The repository structure has been developed in such a way which is clean to the 
 
 - **Utils.py** - this contains helper functions for reading CSV data.
 
-- **data/** - this folder is created to contain the input data files required by the model. This is created to keep raw input seperate from code and moreover helps to replace or extend datasets without changing the solver.
+- **data/** - this folder is created to contain the input data files required by the model. This is to keep raw input seperate from code and moreover helps to replace or extend datasets without changing the solver.
 
 - **tests/** - this folder contains all test cases and each test case defines a specific physical or numerical scenario. It is important to note that test cases do not explicitly contain numerical solvers, instead, they are designed to import required solver and visualisation functions from model.py and plots.py and respectively define only the parameters, initial conditions and scenarios required for each experiment.
 
