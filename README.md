@@ -35,7 +35,7 @@ It is significant to mention that a backward Euler scheme in time and backward d
 
 ## Repository structure
 
-.
+tree
 ├── README.md
 ├── data/
 │   └── initial_conditions.csv
@@ -48,21 +48,8 @@ It is significant to mention that a backward Euler scheme in time and backward d
 └── tests/
 
 
----
 
-## 📁 Repository Structure
 
-.
-├── README.md
-├── data/
-│   └── initial_conditions.csv
-├── results/
-├── src/
-│   ├── solver.py
-│   ├── initial_conditions.py
-│   ├── plotting.py
-│   └── main.py
-└── tests/
 
 ## Branch Structure
 
