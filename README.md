@@ -37,17 +37,15 @@ It is significant to mention that a backward Euler scheme in time and backward d
 
 
 ```text
-.
-├── README.md
+src/
 ├── data/
-│   └── initial_conditions.csv
+├── notebooks/
 ├── results/
-├── src/
-│   ├── solver.py
-│   ├── initial_conditions.py
-│   ├── plotting.py
-│   └── main.py
-└── tests/
+├── test_cases/
+├── model.py
+├── plots.py
+├── utils.py
+└── README.md
 ```
 
 
