@@ -35,7 +35,9 @@ It is significant to mention that a backward Euler scheme in time and backward d
 
 ## Repository structure
 
-tree
+
+```text
+.
 ├── README.md
 ├── data/
 │   └── initial_conditions.csv
@@ -46,8 +48,7 @@ tree
 │   ├── plotting.py
 │   └── main.py
 └── tests/
-
-
+```
 
 
 
