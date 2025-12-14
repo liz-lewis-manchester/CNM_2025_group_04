@@ -3,6 +3,7 @@ import sys
 import numpy as np
 import pandas as pd
 import IPython.display as ipd
+from pathlib import Path
 
 THIS_DIR = os.path.dirname(__file__)
 SRC_DIR = os.path.dirname(THIS_DIR)
@@ -14,17 +15,39 @@ from plots import plot_space_time_snapshots, animate_advection
 
 
 def run_test_case_2():
-  
+    """Run test case 2: Advection of a CSV-based intial condition."""
     dx = 0.2
     dt = 10.0
     t_end = 300.0
     U = 0.1
 
     data_path = os.path.join(SRC_DIR, "data", "initial_conditions.csv")
-    df = pd.read_csv(data_path, encoding="latin1")
 
+    if not os.path.exists(data_path):
+        raise FileNotFoundError(f"Data file not found: {data_path}")
+    
+    # Read initial conditions from CSV 
+    try:  
+        df = pd.read_csv(data_path, encoding="latin1")
+    except pd.errors.EmptyDataError:  
+        print("CSV file is empty")  
+        return  
+    except Exception as e: 
+        print(f"Error reading CSV file: {e}") 
+        return 
+    
+    # Extract data with descriptive names
     x_data = df.iloc[:, 0].to_numpy()
     C_data = df.iloc[:, 1].to_numpy()
+    
+    # Basic data validation  
+    if len(x_data) != len(C_data):  
+        print("Warning: x and C arrays have different lengths")  
+        return  
+    
+    if len(x_data) < 2: 
+        print("Warning: Insufficient data points for interpolation") 
+        return 
 
     x_min, x_max = x_data.min(), x_data.max()
     x = create_space_grid(x_min, x_max, dx)
