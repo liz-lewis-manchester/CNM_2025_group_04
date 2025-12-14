@@ -7,6 +7,36 @@ The task is to simulate the 1D transport of a pollutant in a river using the adv
 
 The project integrates numerical modelling, Python programming, GitHub collaboration, and scientific reporting.
 
+# Project Overview
+
+Our group has been assigned to develop a 1-D pollutant transport model for a river based on the advection equation. It is important to note that it has been decided to solve the model numerically using a backward finite difference scheme. Moreover, a series of test cases are provided also to verify and explore the model behaviour under different conditions.
+
+The code is structured in such a way to clearly separate:
+
+- the numerical model (PDE solver)
+- test cases/ experiments
+- visualisation utilities
+
+---
+
+## Governing Equation
+
+The model has been developed to solve the one-dimensional advection equation with optional decay:
+
+where:
+
+- C (x, t) is the pollutant concentration
+- U is the stream velocity
+- λ is an optional decay coefficient
+
+It is significant to mention that a backward Euler scheme in time and backward difference in space are used, resulting in an unconditionally stable implicit method.
+
+---
+
+## Repository structure
+
+The repository structure has been developed in such a way which is clean to the user and allows easy movement across the folders. Everything is saved in the folder called “src”. The folder “src” itself contains folders: data, notebooks, results and test cases. In the “src” we also have model.py, plots.py and utils.py.
+
 ---
 
 ## 📁 Repository Structure
