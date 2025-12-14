@@ -55,7 +55,7 @@ The repository structure has been developed in such a way which is clean to the 
 
 ## Branch Structure
 
-- **src/** - this directort contains all reusable model components.
+- **src/** - this directory contains all reusable model components.
   
 - **model.py** - this contains the core 1-D advection solver and a varient solver for time-dependant velocity. This exists to keep all numerical methods and PDE logic in the same place, which further on ensures the solver is written just once and reused across all test cases.
   
