@@ -13,6 +13,7 @@ from model import create_space_grid, create_time_grid, advect_1d_backward
 from plots import plot_space_time_snapshots, animate_advection
 
 
+
 def run_test_case_3(
     U_values=None,
     dx_values=None,
@@ -20,109 +21,123 @@ def run_test_case_3(
     L: float = 20.0,
     t_end: float = 300.0,
 ):
-    """Run sensitivity analysis for advection parameters (U, dx, dt)."""
-    
-    # Set default parameter values
-    U_values = U_values or [0.05, 0.1, 0.2]
-    dx_values = dx_values or [0.1, 0.2, 0.5]
-    dt_values = dt_values or [1.0, 5.0, 10.0]
-    
+   
+    if U_values is None:
+        U_values = [0.05, 0.1, 0.2]
+
+    if dx_values is None:
+        dx_values = [0.1, 0.2, 0.5]
+
+    if dt_values is None:
+        dt_values = [1.0, 5.0, 10.0]
     results = []
-    total_simulations = len(U_values) * len(dx_values) * len(dt_values)
-    
-    print(f"Running {total_simulations} simulations...")
-    
+
+
     for U in U_values:
         for dx in dx_values:
             for dt in dt_values:
-                # Create grid
+
                 x = create_space_grid(0.0, L, dx)
                 t = create_time_grid(0.0, t_end, dt)
-                
-                # Initial condition: point source at x=0
-                C0 = np.zeros(len(x))
+
+                nx = x.size
+                nt = t.size
+
+                C0 = np.zeros(nx)
                 C0[0] = 250.0
-                
-                # Run simulation
+
                 C = advect_1d_backward(
-                    C0, U=U, dx=dx, dt=dt, nt=len(t), inlet_func=None
+                    C0,
+                    U=U,
+                    dx=dx,
+                    dt=dt,
+                    nt=nt,
+                    inlet_func=None,
                 )
-                
-                # Calculate results
+
                 max_C = C.max()
                 peak_idx = np.argmax(C[-1, :])
                 peak_x = x[peak_idx]
-                
-                print(f"U={U}, dx={dx}, dt={dt} → maxC={max_C:.2f}, peak_x={peak_x:.2f}")
-                
+
+                print(
+                    f"U={U}, dx={dx}, dt={dt} -> maxC={max_C:.2f}, peak_x={peak_x:.2f}"
+                )
+
                 results.append({
-                    "U": U, "dx": dx, "dt": dt,
-                    "x": x, "t": t, "C": C,
-                    "max_C": max_C, "peak_x": peak_x,
+                    "U": U,
+                    "dx": dx,
+                    "dt": dt,
+                    "x": x,
+                    "t": t,
+                    "C": C,
+                    "max_C": max_C,
+                    "peak_x": peak_x,
                 })
-    
-    # Create sensitivity plots
-    create_sensitivity_plots(results)
-    
-    # Generate animation
-    if results:
-        example = results[0]
-        anim = animate_advection(
-            example["x"], example["t"], example["C"],
-            title="Test Case 3 – Animation Example"
-        )
-        ipd.display(ipd.HTML(anim.to_jshtml()))
-    
-    return results
 
+    fig, ax = plt.subplots(figsize=(8,4))
+    target_U = 0.1
+    target_dt = 5.0
 
-def create_sensitivity_plots(results):
-    """Create three sensitivity plots for dx, dt, and U."""
-    
-    # 1. Sensitivity to dx
-    fig, ax = plt.subplots(figsize=(8, 4))
-    target_U, target_dt = 0.1, 5.0
-    
     for entry in results:
         if entry["U"] == target_U and entry["dt"] == target_dt:
-            ax.plot(entry["x"], entry["C"][-1, :], 
-                   label=f"dx={entry['dx']}")
-    
-    ax.set(xlabel="x (m)", ylabel="C (µg/m³)",
-           title=f"Sensitivity to dx (U={target_U} m/s, dt={target_dt} s)")
+            x, C = entry["x"], entry["C"]
+            label = f"dx={entry['dx']}"
+            ax.plot(x, C[-1, :], label=label)
+
+    ax.set_xlabel("x (m)")
+    ax.set_ylabel("C (µg/m³)")
+    ax.set_title("Sensitivity to dx (U=0.1 m/s, dt=5 s)")
     ax.legend()
     plt.show()
-    
-    # 2. Sensitivity to dt
+
     fig, ax = plt.subplots(figsize=(8, 4))
-    target_U, target_dx = 0.1, 0.1
-    
+    target_U = 0.1
+    target_dx = 0.1
+
     for entry in results:
         if entry["U"] == target_U and abs(entry["dx"] - target_dx) < 1e-12:
-            ax.plot(entry["x"], entry["C"][-1, :],
-                   label=f"dt={entry['dt']}")
-    
-    ax.set(xlabel="x (m)", ylabel="C (µg/m³)",
-           title=f"Sensitivity to dt (U={target_U} m/s, dx={target_dx} m)")
+            x = entry["x"]
+            C = entry["C"]
+            label = f"dt={entry['dt']}"
+            ax.plot(x, C[-1, :], label=label)
+
+    ax.set_xlabel("x (m)")
+    ax.set_ylabel("C (µg/m³)")
+    ax.set_title("Sensitivity to dt (U=0.1 m/s, dx=0.1 m)")
     ax.legend()
     plt.tight_layout()
     plt.show()
-    
-    # 3. Sensitivity to U
+
     fig, ax = plt.subplots(figsize=(8, 4))
-    target_dx, target_dt = 0.1, 5.0
-    
+    target_dx = 0.1
+    target_dt = 5.0
+
     for entry in results:
         if abs(entry["dx"] - target_dx) < 1e-12 and entry["dt"] == target_dt:
-            ax.plot(entry["x"], entry["C"][-1, :],
-                   label=f"U={entry['U']}")
-    
-    ax.set(xlabel="x (m)", ylabel="C (µg/m³)",
-           title=f"Sensitivity to U (dx={target_dx} m, dt={target_dt} s)")
+            x = entry["x"]
+            C = entry["C"]
+            label = f"U={entry['U']}"
+            ax.plot(x, C[-1, :], label=label)
+
+    ax.set_xlabel("x (m)")
+    ax.set_ylabel("C (µg/m³)")
+    ax.set_title("Sensitivity to U (dx=0.1 m, dt=5 s)")
     ax.legend()
     plt.tight_layout()
     plt.show()
+
+
+    example_case = results[0]
+    anim = animate_advection(
+        example_case["x"],
+        example_case["t"],
+        example_case["C"],
+        title="Test Case 3 – Animation Example",
+    )
+    ipd.display(ipd.HTML(anim.to_jshtml()))
+
+    return None
 
 
 if __name__ == "__main__":
-    run_test_case_3()
+    results = run_test_case_3()
