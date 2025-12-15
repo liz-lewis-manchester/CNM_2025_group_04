@@ -1,77 +1,80 @@
 import pandas as pd
 import numpy as np
 
-def read_initial_conditions(path: str) -> pd.DataFrame: 
+
+def read_initial_conditions(path: str) -> pd.DataFrame:
     """
     Reads initial pollutant concentration data from a CSV file.
 
     Expected CSV columns:
         x  - position along the river (m)
-        C  - concentration (µg/m³)
+        C  - concentration (µg/m^3)
 
     Parameters
-    ---------
-    path : str 
-        Path to the CSV file (e.g. 'src/data/initial_conditions.csv').
+    ----------
+    path : str
+        Showing path to the CSV file (e.g. 'src/data/initial_conditions.csv').
 
     Returns
     -------
-    df : pandas.DataFrame 
-         Data Frame with columns ['x', 'C']
+    df : pandas.DataFrame
+        Cleaned DataFrame with columns ['x', 'C'], sorted by x.
     """
 
-    # read the CSV file
+    # Reads the CSV file
     df = pd.read_csv(path)
 
-    # Rename the first two columns to standard name 'x' and 'C'
-    original_cols = df.columns
+    # Renaming first two columns to standard names
+    original_cols = list(df.columns)
     if len(original_cols) < 2:
         raise ValueError("Initial conditions CSV must have at least two columns.")
-    
+
     df = df.rename(columns={
         original_cols[0]: "x",
         original_cols[1]: "C"
     })
 
-    # Keep only the two relevant columns and ensure they are numeric
-    df = df(
-        [["x", "C"]]
-        .astype(float)
+    # Keeping only relevant columns, ensure numeric, drop NaNs, sort
+    df = (
+        df[["x", "C"]]
+        .apply(pd.to_numeric, errors="coerce")
         .dropna(subset=["x", "C"])
         .sort_values("x")
+        .reset_index(drop=True)
     )
 
-    if df.emty:
+    if df.empty:
         raise ValueError("Initial conditions DataFrame is empty after cleaning.")
+
     return df
 
 
 def interpolate_to_grid(df: pd.DataFrame, grid_x: np.ndarray) -> np.ndarray:
     """
-    Interpolates initial-condition data from the CSV onto the model grid.
+    This part interpolates initial-condition data from measurement points
+    onto the computational model grid.
+
+    Linear interpolation is used. Values outside the measured
+    domain are set to zero.
 
     Parameters
     ----------
     df : pandas.DataFrame
         DataFrame with columns:
             x  - positions along the river (m)
-            C  - concentration at those positions (µg/m³)
+            C  - concentration at those positions (µg/m^3)
     grid_x : np.ndarray
         1D numpy array of model grid positions (m).
 
     Returns
     -------
     C_grid : np.ndarray
-        1D numpy array of interpolated concentrations on grid_x (µg/m³),
-        representing C(x, t=0) on the model grid.
+        Initial concentration profile on the model grid, C(x, t=0).
     """
 
-    # Extract data as numpy arrays
     x_data = df["x"].to_numpy(dtype=float)
     C_data = df["C"].to_numpy(dtype=float)
 
-    # Linear interpolation from measurement points to model grid
-    # Values outside the measured range are set to zero
     C_grid = np.interp(
         grid_x,
         x_data,
@@ -82,9 +85,11 @@ def interpolate_to_grid(df: pd.DataFrame, grid_x: np.ndarray) -> np.ndarray:
 
     return C_grid
 
+
 def load_initial_condition_on_grid(path: str, grid_x: np.ndarray) -> np.ndarray:
     """
-    Convenience function that reads the CSV and returns C(x, 0) on the model grid.
+    This part is the convenience wrapper that reads the initial-condition CSV file
+    and interpolates it directly onto the model grid.
 
     Parameters
     ----------
@@ -98,11 +103,6 @@ def load_initial_condition_on_grid(path: str, grid_x: np.ndarray) -> np.ndarray:
     C0 : np.ndarray
         Initial concentration profile on the model grid, C(x, t=0).
     """
-   
+
     df_ic = read_initial_conditions(path)
-    C0 = interpolate_to_grid(df_ic, grid_x)
-    return C0
-   
-
-
-
+    return interpolate_to_grid(df_ic, grid_x)
