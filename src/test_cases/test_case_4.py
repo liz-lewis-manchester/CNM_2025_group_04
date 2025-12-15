@@ -4,11 +4,12 @@ import sys
 import matplotlib.pyplot as plt
 import IPython.display as ipd
 
+# path setup so this script can import modules from src/
 THIS_DIR = os.path.dirname(__file__)
 SRC_DIR = os.path.dirname(THIS_DIR)
 if SRC_DIR not in sys.path:
     sys.path.append(SRC_DIR)
-
+# imports solver utilities and plotting/animation functions 
 from model import create_space_grid, create_time_grid, advect_1d_backward
 from plots import plot_space_time_snapshots, animate_advection
 
@@ -23,24 +24,31 @@ def run_test_case_4(
     U: float = 0.1,
     example_lambda: float | None = None,
 ):
-
-
+    """ 
+    this test investigates how an exponentially decaying pollutant
+    concentration in time alters the model results.  
+    the purpose of this test is to compare C(x, t_end) for different labmda values and observe how faster decay 
+    in the inlet signal reduces downstream concentration over time.
+    """
+    # default decay rates (used if caller does not supply values)
     if decay_rates is None:
         decay_rates = [0.0, 0.005, 0.01, 0.02]
 
-    results = {}
-
+    results = {} # stores results for each labmda value (keyed by 1am)
+    # loops over decay rates and runs the solver for each case
     for lam in decay_rates:
-
+        # creates computational grids
         x = create_space_grid(0.0, L, dx)
         t = create_time_grid(0.0, t_end, dt)
 
         nx = x.size
         nt = t.size
 
+        # initial condition at t=0 (concentration profile along the domain)
         C0 = np.zeros(nx)
         C0[0] = C_in0
 
+        # time dependant inlet boundary condition (exponential decay in time)
         def inlet(time):
             return C_in0 * np.exp(-lam * time)
 
@@ -53,11 +61,14 @@ def run_test_case_4(
             inlet_func=inlet,
         )
 
+        # stores outputs for later comparison/plotting
         results[lam] = {"x": x, "t": t, "C": C}
 
+        # simple diagnostic output 
         max_C = C.max()
         print(f"λ={lam}, U={U}, dx={dx}, dt={dt}, nx={nx}, nt={nt}, maxC={max_C:.2f}")
 
+    # plot: compares final concentration profiles for each lambda 
     fig, ax = plt.subplots(figsize=(8, 4))
 
     for lam, res in results.items():
@@ -72,7 +83,7 @@ def run_test_case_4(
     plt.tight_layout()
     plt.show()
 
-    
+    # this is optional which shows space-time snapshots and animation for one chosen lambda 
     if example_lambda is not None and example_lambda in results:
         res = results[example_lambda]
         plot_space_time_snapshots(
@@ -85,6 +96,7 @@ def run_test_case_4(
             show=True,
         )
 
+        # animation for one selected case 
         anim = animate_advection(
             res["x"],
             res["t"],
@@ -98,7 +110,7 @@ def run_test_case_4(
 
     return None
 
-
+# allows this test to be run as a standalone script 
 if __name__ == "__main__":
     results = run_test_case_4()
 
