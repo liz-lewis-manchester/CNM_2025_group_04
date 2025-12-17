@@ -84,8 +84,36 @@ def run_test_case_4(
     plt.show()
 
     # this is optional which shows space-time snapshots and animation for one chosen lambda 
-    if example_lambda is not None and example_lambda in results:
+    if example_lambda is not None:
+        if example_lambda not in results:
+            x = create_space_grid(0.0, L, dx)
+            t = create_space_grid(0.0, t_end, dt)
+
+            nx = x.size
+            nt = t.size
+
+            C0 = np.zeros(nx)
+            C0[0] = C_in0
+
+            def inlet(time):
+                return C_in0 * np.exp(-example_lambda * time)
+            C = advect_1d_backward(
+              C0,
+              U=U,
+              dx=dx,
+              dt=dt,
+              nt=nt,
+              inlet_func=inlet,
+            )
+
+            results[example_lambda] = {"x": x, "t": t, "C": C}
+            print(
+              f"(extra run) λ={example_lambda} was not in decay_rates, "
+              "so it was simulated for animation."
+            )
+
         res = results[example_lambda]
+
         plot_space_time_snapshots(
             res["x"],
             res["t"],
@@ -112,5 +140,5 @@ def run_test_case_4(
 
 # allows this test to be run as a standalone script 
 if __name__ == "__main__":
-    results = run_test_case_4()
+    run_test_case_4()
 
