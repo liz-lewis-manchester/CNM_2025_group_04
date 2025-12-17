@@ -75,7 +75,7 @@ src/
 
 The most efficient and user friendly way of running the code is to run it in Google Colab, because it doesn't need extra libraries to be installed such as Matplotlib and does not require a specific Python version to run everything.
 
-The easiest way to run the code and see results is to clone the following repository in Google Collab, however, it is significant to mention that the model can be implemented and tested in every environment either by downloading the zip or cloning the repository.
+The easiest way to run the code and see results is to clone the following repository in Google Colab, however, it is significant to mention that the model can be implemented and tested in every environment either by downloading the zip or cloning the repository.
 
 Below is a demonstration of how step by step the model can run, which will respectively produce the graphs, animation and/or results.
 
@@ -96,7 +96,7 @@ run_test_case_1()
 
 Once this is done, you can click the run button and the code will produce all the required figures and animations, at the same time saving all the figures in the results folder.
 
-The aforementioned technique can be used in all test cases, however, if you want to see the animation for "test case 4" you will need to highlight for which lambda you want to see the animation. In order to do this, in a new cell just paste the following:
+The aforementioned technique can be used in all test cases by just changing the number test and typing the one that you are interested in, however, if you want to see the animation for "test case 4" you will need to highlight for which lambda you want to see the animation. In order to do this, in a new cell just paste the following:
 
 ```
 %cd /content/CNM_2025_group_04/src
